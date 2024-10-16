@@ -3,8 +3,7 @@ pipeline {
 
     environment {
         registry = "oli0404/vproapp04"
-        registrycredential = "dockerhub"
-        scannerHome = tool 'mysonarscanner4' // Moved to the top for clarity
+        registryCredential = "dockerhub"
     }
 
     stages {
@@ -93,7 +92,7 @@ pipeline {
         stage('Kubernetes Deploy') {
             agent { label 'KOPS' }
             steps {
-                sh "helm upgrade --install --force vprofile-stack helm/vprofilecharts --set appimage=${registry}:V${BUILD_NUMBER}"
+                sh "helm upgrade --install --force vprofile-stack helm/vprofilecharts --set appimage=${registry}:V${BUILD_NUMBER} --namespace prod"
             }
         }
     }
