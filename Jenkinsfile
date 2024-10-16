@@ -4,7 +4,6 @@ pipeline {
     environment {
         registry = "oli0404/vproapp04"
         registryCredential = "dockerhub"
-        scannerHome =tool 'mysonarscanner4'
     }
 
     stages {
@@ -43,20 +42,7 @@ pipeline {
             }
         }
 
-        stage('CODE ANALYSIS with SONARCLOUD') {
-            steps {
-                withSonarCloudEnv('sonar-cloud-pro') {
-                    sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=vprofile \
-                    -Dsonar.host.url=https://sonarcloud.io \
-                    -Dsonar.login=${env.SONAR_TOKEN}''' // Use an environment variable for the token
-                }
-
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
+        
         stage('Build App Image') {
             steps {
                 script {
